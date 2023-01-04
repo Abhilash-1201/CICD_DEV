@@ -104,7 +104,7 @@ resource "aws_instance" "SonarQube_instance" {
 
    vpc_security_group_ids	 = [aws_security_group.ec2-sg.id]
        tenancy                        = var.tenancy
-   depends_on			= [aws_security_group.ec2-sg]
+   depends_on			= [aws_instance.SonarQube_instance]
   
      provisioner "remote-exec" {
      inline = ["echo 'Jenkins'"]
