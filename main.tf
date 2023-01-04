@@ -58,8 +58,8 @@ locals {
 #-----------------------------------
 #Creating a AWS Instance
 #-------------------------------
-
-resource "aws_instance" "my_instance" {
+#SonarQube Instance Creation
+resource "aws_instance" "SonarQube_instance" {
   ami                           = var.ami_id
   associate_public_ip_address   = var.associate_public_ip_address
   instance_type                 = var.instance_type
@@ -73,7 +73,7 @@ resource "aws_instance" "my_instance" {
   depends_on			= [aws_security_group.ec2-sg]
   
     provisioner "remote-exec" {
-    inline = ["echo 'Jenkins'"]
+    inline = ["echo 'SonarQube'"]
    } 
    
    connection {
@@ -83,7 +83,7 @@ resource "aws_instance" "my_instance" {
     host        = self.public_ip
   }
     provisioner "local-exec" {
-    command = "sleep 30; ansible-playbook -i ${self.private_ip}, -u ${var.user} --key-file ${var.key_name}.pem ansiblemain.yml"
+    command = "sleep 30; ansible-playbook -i ${self.private_ip}, -u ${var.user} --key-file ${var.key_name}.pem sonarqubemain.yml"
   }
 
 
@@ -92,8 +92,8 @@ resource "aws_instance" "my_instance" {
   }
 }
 
-# ###  SonarQube
-# resource "aws_instance" "sonarqube_instance" {
+# ###  JENKINS Instance Creation
+# resource "aws_instance" "Jenkins_instance" {
 #   ami                           = var.ami_id
 #   associate_public_ip_address   = var.associate_public_ip_address
 #   instance_type                 = var.instance_type
@@ -107,7 +107,7 @@ resource "aws_instance" "my_instance" {
 #   depends_on			= [aws_security_group.ec2-sg]
   
 #     provisioner "remote-exec" {
-#     inline = ["echo 'SonarQube'"]
+#     inline = ["echo 'Jenkins'"]
 #    } 
    
 #    connection {
@@ -117,7 +117,7 @@ resource "aws_instance" "my_instance" {
 #     host        = self.public_ip
 #   }
 #     provisioner "local-exec" {
-#     command = "sleep 30; ansible-playbook -i ${self.private_ip}, -u ${var.user} --key-file ${var.key_name}.pem ansiblemain.yml"
+#     command = "sleep 30; ansible-playbook -i ${self.private_ip}, -u ${var.user} --key-file ${var.key_name}.pem jenkinsmain.yml"
 #   }
 
 
@@ -129,38 +129,38 @@ resource "aws_instance" "my_instance" {
 #----------------------------------------
 # creating a elastic ip for ec2 instance
 #-----------------------------------
-resource "aws_eip" "elastic_ip" {
-  instance 	= aws_instance.my_instance.id
-  vpc      	= true
-  depends_on	= [aws_instance.my_instance]
+#resource "aws_eip" "elastic_ip" {
+#  instance 	= aws_instance.SonarQube_instance.id
+#  vpc      	= true
+#  depends_on	= [aws_instance.SonarQube_instance]
   
-  tags = {
+#  tags = {
 
-   Name = "${var.tags}-eip"
- }
-}
+#   Name = "${var.tags}-eip"
+# }
+#}
 
 #-------------------------------------------
 # Creating a EBS volume
 #-----------------------------------
-resource "aws_ebs_volume" "volume" {
-  availability_zone = var.availability_zone
-  size              = var.volume_size
-  type              = var.volume_type
-  depends_on	= [aws_instance.my_instance]
+#resource "aws_ebs_volume" "volume" {
+#  availability_zone = var.availability_zone
+#  size              = var.volume_size
+#  type              = var.volume_type
+#  depends_on	= [aws_instance.SonarQube_instance]
 
-  tags = {
-     Name = "${var.tags}-ebs"
-  }
-}
+#  tags = {
+#     Name = "${var.tags}-ebs"
+#  }
+#}
 
 #-------------------------------------------
 #Attaching EBS volume to the ec2 instance
 #-------------------------------------------
-resource "aws_volume_attachment" "volume-attach" {
-  device_name = var.device_name
-  volume_id   = aws_ebs_volume.volume.id
-  instance_id = aws_instance.my_instance.id
-}
+#resource "aws_volume_attachment" "volume-attach" {
+#  device_name = var.device_name
+#  volume_id   = aws_ebs_volume.volume.id
+#  instance_id = aws_instance.SonarQube_instance.id
+#}
 
  
