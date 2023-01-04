@@ -88,43 +88,43 @@ resource "aws_instance" "SonarQube_instance" {
 
 
  tags = {
-  Name	= var.tags
+  Name	= "${var.tags} - SonarQube"
   }
 }
 
 # ###  JENKINS Instance Creation
-# resource "aws_instance" "Jenkins_instance" {
-#   ami                           = var.ami_id
-#   associate_public_ip_address   = var.associate_public_ip_address
-#   instance_type                 = var.instance_type
-#   availability_zone             = var.availability_zone
-#   key_name                      = var.key_name
-#   subnet_id                     = var.subnet_pub
+ resource "aws_instance" "Jenkins_instance" {
+   ami                           = var.ami_id
+   associate_public_ip_address   = var.associate_public_ip_address
+   instance_type                 = var.instance_type
+   availability_zone             = var.availability_zone
+   key_name                      = var.key_name
+   subnet_id                     = var.subnet_pub
   
 
-#   vpc_security_group_ids	 = [aws_security_group.ec2-sg.id]
-#   tenancy                        = var.tenancy
-#   depends_on			= [aws_security_group.ec2-sg]
+   vpc_security_group_ids	 = [aws_security_group.ec2-sg.id]
+       tenancy                        = var.tenancy
+   depends_on			= [aws_security_group.ec2-sg]
   
-#     provisioner "remote-exec" {
-#     inline = ["echo 'Jenkins'"]
-#    } 
+     provisioner "remote-exec" {
+     inline = ["echo 'Jenkins'"]
+    } 
    
-#    connection {
-#     type        = "ssh"
-#     user        = var.user
-#     private_key = file("ohio.pem")
-#     host        = self.public_ip
-#   }
-#     provisioner "local-exec" {
-#     command = "sleep 30; ansible-playbook -i ${self.private_ip}, -u ${var.user} --key-file ${var.key_name}.pem jenkinsmain.yml"
-#   }
+    connection {
+     type        = "ssh"
+     user        = var.user
+     private_key = file("ohio.pem")
+     host        = self.public_ip
+   }
+     provisioner "local-exec" {
+     command = "sleep 30; ansible-playbook -i ${self.private_ip}, -u ${var.user} --key-file ${var.key_name}.pem jenkinsmain.yml"
+   }
 
 
-#  tags = {
-#   Name	= var.tags
-#   }
-# }
+  tags = {
+   Name	= "${var.tags} - Jenkins"
+   }
+ }
 
 #----------------------------------------
 # creating a elastic ip for ec2 instance
