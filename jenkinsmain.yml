@@ -18,5 +18,5 @@
     - project_name: maven
     - project_key: maven
   tasks:
-    - include_tasks: sonarqube.yml
-    - include_tasks: Jenkins.yml
+    #- include_tasks: sonarqube.yml
+    - include_tasks: jenkins.yml
